@@ -1,0 +1,49 @@
+---
+- name: Installation package psycopg2
+  ansible.builtin.package:
+    name: python3-psycopg2
+    state: present
+
+- name: Installation Postgresql
+  ansible.builtin.package:
+    name: postgresql
+    state: present
+
+- name: Démarrer le service pgsql
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Configurer l authentification par mot de passe pour l utilisateur postgres
+  ansible.builtin.lineinfile:
+    path: /etc/postgresql/15/main/pg_hba.conf
+    regexp: '^local\s+all\s+postgres\s+peer'
+    line: 'local   all             postres                                 md5'
+    state: present
+  notify: Redemarrer postgreSQL
+
+- name: Config utilisateur admin pgsql
+  ansible.builtin.postgresql_user:
+    name: postgres
+    password: 'password'
+    state: present
+    login_user: postgres
+    login_password: 'password'
+
+- name: Création de la base de données
+  ansible.builtin.postgresql_db:
+    name: root
+    state: present
+    login_user: postgres
+    login_password: 'password'
+
+- name: Créer utilisateur pour la bdd
+  ansible.builtin.postgresql_user:
+    name: root
+    password: 'Espoir15!'
+    priv: "ALL"
+    db: root
+    state: present
+    login_user: postgres
+    login_password: 'password'

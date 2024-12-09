@@ -1,0 +1,10 @@
+---
+- hosts: all
+  roles:
+    - common
+    - gitlab
+
+- hosts: database
+  become: yes
+  roles:
+    - bdd

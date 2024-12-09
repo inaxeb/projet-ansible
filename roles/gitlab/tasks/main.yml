@@ -1,0 +1,18 @@
+---
+
+- name: Ajouter repo Gitlab
+  shell: |
+    curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+
+- name: Installation Gitlab
+  apt:
+    name: gitlab-ce
+    state: present
+
+- name: Config Gitlab
+  template:
+    src: gitlab.rb.j2
+    dest: /etc/gitlab/gitlab.rb
+
+- name: reconfigure Gitlab
+  command: gitlab-ctl reconfigure

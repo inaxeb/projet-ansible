@@ -1,0 +1,14 @@
+---
+
+- name: Update packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Installation packages common
+  apt:
+    name:
+      - vim
+      - curl
+      - wget
+    state: present
